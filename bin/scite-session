@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'scite/session'
+SciTE::Session.restore layout: ARGV[0]
