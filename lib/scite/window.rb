@@ -88,7 +88,7 @@ module SciTE
       @threads << Thread.new {
         sleep 0.2
         self.position = {w: 50, h: 20, x: 2550, y: -40}
-        sleep 3 # даём вкладкам прогрузиться
+        sleep 3 # let tabs to be rendered
         move if @move_to
         set_title if @title
         yield self if block_given?

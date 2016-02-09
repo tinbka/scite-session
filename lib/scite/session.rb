@@ -37,7 +37,7 @@ module SciTE
           {session: win.session, title: win.title, move_to: win.position}
         }
         if append
-          window_configs = load_layout(layout) << window_configs
+          window_configs = load_layout(layout) + window_configs
         end
           
         File.write "#{layouts_home}/#{layout}.yml", window_configs.to_yaml
@@ -52,7 +52,7 @@ module SciTE
           if params.is Window
             params
           else
-            Window.new params
+            Window.new **params
           end
         }
         windows.each {|w|
