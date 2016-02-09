@@ -28,15 +28,24 @@ module SciTE
     
     class << self
     
-      def save(windows, layout:)
-        File.write "#{layouts_home}/#{layout}.yml", windows.map {|win|
+      # Save session
+      # @ windows : Array(SciTE::Window) : Save session
+      # @ layout : String : session layout yml-file name (w/o extension)
+      # @ append : Boolean : add a window record to the layout yml instead of overwrite it (default: false)
+      def save(windows, layout:, append: false)
+        window_configs = windows.map {|win|
           {session: win.session, title: win.title, move_to: win.position}
-        }.to_yaml
+        }
+        if append
+          window_configs = load_layout(layout) << window_configs
+        end
+          
+        File.write "#{layouts_home}/#{layout}.yml", window_configs.to_yaml
       end
     
       def restore(windows: nil, layout: nil)
         if layout
-          windows ||= YAML.load read "#{layouts_home}/#{layout}.yml"
+          windows = load_layout(layout)
         end
         
         windows.map! {|params|
@@ -51,6 +60,12 @@ module SciTE
           sleep 0.1
         }
         windows.each &:wait
+      end
+      
+      private
+      
+      def load_layout(layout)
+        YAML.load read "#{layouts_home}/#{layout}.yml"
       end
     
     end

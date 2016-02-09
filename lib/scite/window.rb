@@ -69,9 +69,10 @@ module SciTE
     attr_reader :session, :move_to
     attr_writer :session
     
-    def self.find_all
+    # @ title : String : regexp-ish of title of windows you want to select
+    def self.find_all(title: '.+ [-*] SciTE')
       `wmctrl -l -p`.split("\n").map {|line|
-        if line[/^(0x\w+) +-?\d+ (\d+) +\S+ +(.+ [-*] SciTE)$/]
+        if line[/^(0x\w+) +-?\d+ (\d+) +\S+ +(#{title})$/]
           new(title: $3, pid: $2.to_i, wid: $1)
         end
       }.compact
