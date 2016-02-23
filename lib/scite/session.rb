@@ -52,6 +52,7 @@ module SciTE
           if params.is Window
             params
           else
+            params[:session] = find_session_file(params[:session], layout)
             Window.new **params
           end
         }
@@ -66,6 +67,16 @@ module SciTE
       
       def load_layout(layout)
         YAML.load read "#{layouts_home}/#{layout}.yml"
+      end
+      
+      def find_session_file(session, layout)
+        if File.file? "#{home}/#{session}"
+          session
+        elsif File.file? "#{home}/#{layout}/#{session}"
+          "#{layout}/#{session}"
+        else
+          raise Errno::ENOENT, "SciTE session file #{session} for layout #{layout} is missing at #{home}"
+        end
       end
     
     end
